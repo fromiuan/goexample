@@ -27,7 +27,7 @@ type RoBot interface {
 	GetPrice(kye int) float64
 	SetDish(key, number int) bool
 	DelDish(key, number int) bool
-	TotalDish() string
+	TotalDish() float64
 	Pay() bool
 }
 
