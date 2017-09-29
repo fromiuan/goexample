@@ -14,64 +14,63 @@ import (
 // 	Pay() bool
 
 const (
-	ChineseTag = "zh_cn"
+	RusTag = "rus"
 )
 
 var (
-	DeskNumber  = make(map[int]map[int]int)
-	ChineseMenu = map[int]string{
-		1: "水果沙拉",
-		2: "番茄牛腩",
-		3: "番茄炒蛋",
-		4: "水饺",
+	RusMenu = map[int]string{
+		1: "фруктовый салат ",
+		2: "филе  помидоров ",
+		3: "с помидорами ",
+		4: "пельмени",
 	}
 
-	ChinesePrice = map[int]float64{
+	RusPrice = map[int]float64{
 		1: 24.09,
 		2: 150.32,
 		3: 15,
 		4: 25.09,
 	}
 
-	ChineseLang = &Chinese{}
+	RussiaLang = &Russia{}
 )
 
-type Chinese struct {
+type Russia struct {
 	lock     *sync.RWMutex
 	Desk     int
 	Lang     string
 	DishMenu map[int]int
 }
 
-func NewChinese() *Chinese {
-	return &Chinese{
+func NewRussia() *Russia {
+	return &Russia{
 		lock:     new(sync.RWMutex),
-		Lang:     ChineseTag,
+		Lang:     RusTag,
 		DishMenu: make(map[int]int),
 	}
 }
 
-func (c *Chinese) Welcome(desk int) {
-	call := fmt.Sprintf("欢迎光临,第%d号桌客人,	请问需要点儿什么？", desk)
+func (c *Russia) Welcome(desk int) {
+	call := fmt.Sprintf("Добро пожаловать,  стол номер  %d гостей  , извините,  нужно  что - нибудь  ? ", desk)
 	fmt.Println(call)
 	c.Desk = desk
 }
 
-func (c *Chinese) Name(key int) string {
-	if menu, ok := ChineseMenu[key]; ok {
+func (c *Russia) Name(key int) string {
+	if menu, ok := RusMenu[key]; ok {
 		return menu
 	}
-	return "菜单不存在"
+	return "меню  не существует "
 }
 
-func (c *Chinese) GetPrice(key int) float64 {
-	if price, ok := ChinesePrice[key]; ok {
+func (c *Russia) GetPrice(key int) float64 {
+	if price, ok := RusPrice[key]; ok {
 		return price
 	}
 	return 0.00
 }
 
-func (c *Chinese) SetDish(key, number int) bool {
+func (c *Russia) SetDish(key, number int) bool {
 	c.lock.Lock()
 	defer c.lock.Unlock()
 	if value, ok := c.DishMenu[key]; ok {
@@ -83,7 +82,7 @@ func (c *Chinese) SetDish(key, number int) bool {
 	return true
 }
 
-func (c *Chinese) DelDish(key, number int) bool {
+func (c *Russia) DelDish(key, number int) bool {
 	c.lock.Lock()
 	defer c.lock.Unlock()
 	if value, ok := c.DishMenu[key]; ok {
@@ -97,28 +96,28 @@ func (c *Chinese) DelDish(key, number int) bool {
 	return true
 }
 
-func (c *Chinese) updatedish() {
+func (c *Russia) updatedish() {
 	DeskNumber[c.Desk] = c.DishMenu
 }
 
-func (c *Chinese) TotalDish() (count float64) {
+func (c *Russia) TotalDish() (count float64) {
 	c.lock.RLocker()
 	defer c.lock.RUnlock()
 	for key, _ := range c.DishMenu {
-		if price, ok := ChinesePrice[key]; ok {
+		if price, ok := RusPrice[key]; ok {
 			count = count + price
 		}
 	}
-	msg := fmt.Sprintf("总计%d元", count)
+	msg := fmt.Sprintf("в общей сложности  %d  юаней ", count)
 	fmt.Println(msg)
 	return count
 }
 
-func (c *Chinese) Pay() bool {
+func (c *Russia) Pay() bool {
 	if _, ok := DeskNumber[c.Desk]; ok {
 		delete(DeskNumber, c.Desk)
 		return true
-		fmt.Println("谢谢惠顾")
+		fmt.Println("Спасибо за ваше покровительство ")
 	}
 	return false
 }

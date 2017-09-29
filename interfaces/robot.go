@@ -22,7 +22,7 @@ var (
 
 // define OrderRoBot interface
 type RoBot interface {
-	Welcome(tableNumber string)
+	Welcome(tableNumber int)
 	Name(key int) string
 	GetPrice(kye int) float64
 	SetDish(key, number int) bool
